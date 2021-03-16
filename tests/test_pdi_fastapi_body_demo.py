@@ -119,13 +119,23 @@ def valid_user(
     raise Exception("not allowed")
 
 
+def valid_user2(
+    credentials: HTTPBasicCredentials = Depends(security),
+):
+
+    if "foo" == credentials.username and "bar" == credentials.password:
+        return True
+    raise Exception("not allowed")
+
+
 @app.post("/books/{id}", response_model=Book)
 @inject
 def update_book(
     id: str,
     payload: UpdateBook,
     repo: Repo = Depends(Provide[Container.repo]),
-    valid_user=Depends(valid_user),  # remove this to make the test work
+    # remove this  or replace with valid_user2 to make the test work
+    valid_user=Depends(valid_user),
 ):
 
     book = payload.dict()
